@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using University.BL.DTOs;
@@ -13,14 +11,12 @@ namespace University.Web.Controllers
     {
         private readonly ApiService apiService = new ApiService();
 
-        public async Task <IActionResult> Index()
+        public async Task<IActionResult> Index()
         {
             var responseDTO = await apiService.RequestAPI<List<StudentOutputDTO>>("https://universityapisteven.azurewebsites.net/",
                 "api/Students/GetAll/",
                 null,
-                ApiService.Method.Get,
-                false);
-        
+                ApiService.Method.Get);
 
             var students = (List<StudentOutputDTO>)responseDTO.Data;
             return View(students);
@@ -35,30 +31,24 @@ namespace University.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(StudentDTO studentDTO)
         {
-           
-
             var responseDTO = await apiService.RequestAPI<StudentDTO>("https://universityapisteven.azurewebsites.net/",
                 "api/Students/",
                 studentDTO,
-                ApiService.Method.Post,
-                false);
+                ApiService.Method.Post);
 
-            if (responseDTO.Code == (int)HttpStatusCode.Created)
+            if (responseDTO.Code == (int)HttpStatusCode.OK)
                 return RedirectToAction(nameof(Index));
 
             return View(studentDTO);
         }
 
         [HttpGet]
-        public async Task <IActionResult >Edit( int id)
-        {
-            //api/Students/GetStudent/{id}
+        public async Task<IActionResult> Edit(int id)
+        {            
             var responseDTO = await apiService.RequestAPI<StudentOutputDTO>("https://universityapisteven.azurewebsites.net/",
-              "api/Students/"+ id,
+              "api/Students/GetById/" + id,
               null,
-              ApiService.Method.Get,
-              false);
-
+              ApiService.Method.Get);
 
             var student = (StudentOutputDTO)responseDTO.Data;
 
@@ -68,29 +58,24 @@ namespace University.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(StudentOutputDTO studentDTO)
         {
-
-
             var responseDTO = await apiService.RequestAPI<StudentDTO>("https://universityapisteven.azurewebsites.net/",
-                "api/Students/"+ studentDTO.ID,
+                "api/Students/" + studentDTO.ID,
                 studentDTO,
-                ApiService.Method.Put,
-                false);
+                ApiService.Method.Put);
 
-            if (responseDTO.Code == (int)HttpStatusCode.NoContent)
+            if (responseDTO.Code == (int)HttpStatusCode.OK)
                 return RedirectToAction(nameof(Index));
 
             return View(studentDTO);
         }
+
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
-        {
-            //api/Students/GetStudent/{id}
+        {            
             var responseDTO = await apiService.RequestAPI<StudentOutputDTO>("https://universityapisteven.azurewebsites.net/",
               "api/Students/" + id,
               null,
-              ApiService.Method.Get,
-              false);
-
+              ApiService.Method.Get);
 
             var student = (StudentOutputDTO)responseDTO.Data;
 
@@ -99,23 +84,16 @@ namespace University.Web.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Delete(StudentOutputDTO studentDTO)
-        {
-            //api/Students/GetStudent/{id}
+        {            
             var responseDTO = await apiService.RequestAPI<StudentOutputDTO>("https://universityapisteven.azurewebsites.net//",
               "api/Students/" + studentDTO.ID,
               null,
-              ApiService.Method.Delete,
-              false);
+              ApiService.Method.Delete);
 
-            if (responseDTO.Code == (int)HttpStatusCode.NoContent)
+            if (responseDTO.Code == (int)HttpStatusCode.OK)
                 return RedirectToAction(nameof(Index));
 
             return View(studentDTO);
         }
-
-
-
-
-
     }
 }
