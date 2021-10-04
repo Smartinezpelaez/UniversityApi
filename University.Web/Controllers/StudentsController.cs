@@ -15,12 +15,12 @@ namespace University.Web.Controllers
 
         public async Task <IActionResult> Index()
         {
-            var responseDTO = await apiService.RequestAPI<List<StudentOutputDTO>>("https://university-api.azurewebsites.net/",
-                "api/Students/GetStudents/",
+            var responseDTO = await apiService.RequestAPI<List<StudentOutputDTO>>("https://universityapisteven.azurewebsites.net/",
+                "api/Students/GetAll/",
                 null,
                 ApiService.Method.Get,
                 false);
-
+        
 
             var students = (List<StudentOutputDTO>)responseDTO.Data;
             return View(students);
@@ -37,7 +37,7 @@ namespace University.Web.Controllers
         {
            
 
-            var responseDTO = await apiService.RequestAPI<StudentDTO>("https://university-api.azurewebsites.net/",
+            var responseDTO = await apiService.RequestAPI<StudentDTO>("https://universityapisteven.azurewebsites.net/",
                 "api/Students/",
                 studentDTO,
                 ApiService.Method.Post,
@@ -53,8 +53,8 @@ namespace University.Web.Controllers
         public async Task <IActionResult >Edit( int id)
         {
             //api/Students/GetStudent/{id}
-            var responseDTO = await apiService.RequestAPI<StudentOutputDTO>("https://university-api.azurewebsites.net/",
-              "api/Students/GetStudent/"+ id,
+            var responseDTO = await apiService.RequestAPI<StudentOutputDTO>("https://universityapisteven.azurewebsites.net/",
+              "api/Students/"+ id,
               null,
               ApiService.Method.Get,
               false);
@@ -70,7 +70,7 @@ namespace University.Web.Controllers
         {
 
 
-            var responseDTO = await apiService.RequestAPI<StudentDTO>("https://university-api.azurewebsites.net/",
+            var responseDTO = await apiService.RequestAPI<StudentDTO>("https://universityapisteven.azurewebsites.net/",
                 "api/Students/"+ studentDTO.ID,
                 studentDTO,
                 ApiService.Method.Put,
@@ -85,8 +85,8 @@ namespace University.Web.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             //api/Students/GetStudent/{id}
-            var responseDTO = await apiService.RequestAPI<StudentOutputDTO>("https://university-api.azurewebsites.net/",
-              "api/Students/GetStudent/" + id,
+            var responseDTO = await apiService.RequestAPI<StudentOutputDTO>("https://universityapisteven.azurewebsites.net/",
+              "api/Students/" + id,
               null,
               ApiService.Method.Get,
               false);
@@ -101,7 +101,7 @@ namespace University.Web.Controllers
         public async Task<IActionResult> Delete(StudentOutputDTO studentDTO)
         {
             //api/Students/GetStudent/{id}
-            var responseDTO = await apiService.RequestAPI<StudentOutputDTO>("https://university-api.azurewebsites.net/",
+            var responseDTO = await apiService.RequestAPI<StudentOutputDTO>("https://universityapisteven.azurewebsites.net//",
               "api/Students/" + studentDTO.ID,
               null,
               ApiService.Method.Delete,
