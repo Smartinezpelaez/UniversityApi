@@ -134,8 +134,8 @@ namespace University.Api.Controllers
                 if (OfficeAssignments == null)
                     return Ok(new ResponseDTO { Code = (int)HttpStatusCode.NotFound, Message = "NotFound" });
 
-                if (context.OfficeAssignments.Any(x => x.InstructorId == id))
-                    throw new Exception("Dependencies");
+                //if (context.OfficeAssignments.Any(x => x.id == id))
+                //    throw new Exception("Dependencies");
 
                 context.OfficeAssignments.Remove(OfficeAssignments);
                 context.SaveChanges();

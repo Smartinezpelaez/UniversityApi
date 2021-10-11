@@ -135,8 +135,8 @@ namespace University.Api.Controllers
                 if (departments == null)
                     return Ok(new ResponseDTO { Code = (int)HttpStatusCode.NotFound, Message = "NotFound" });
 
-                if (context.Departments.Any(x => x.InstructorId == id))
-                    throw new Exception("Dependencies");
+                //if (context.Departments.Any(x => x.InstructorId == id))
+                //    throw new Exception("Dependencies");
 
            
                 context.Departments.Remove(departments);

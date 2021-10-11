@@ -104,7 +104,7 @@ namespace University.Api.Controllers
                         Message = string.Join(",", ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage))
                     });
 
-                var instructors = context.Courses.Find(id);
+                var instructors = context.Instructors.Find(id);
                 if (instructors == null)
                     return Ok(new ResponseDTO { Code = (int)HttpStatusCode.NotFound, Message = "NotFound" });
 
