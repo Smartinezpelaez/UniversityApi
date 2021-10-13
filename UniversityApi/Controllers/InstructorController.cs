@@ -134,14 +134,14 @@ namespace University.Api.Controllers
                 if (instructors == null)
                     return Ok(new ResponseDTO { Code = (int)HttpStatusCode.NotFound, Message = "NotFound" });
 
-                if (context.Departments.Any(x => x.InstructorId == id))
-                    throw new Exception("Dependencies");
+                //if (context.Departments.Any(x => x.InstructorId == id))
+                //    throw new Exception("Dependencies");
 
-                if (context.OfficeAssignments.Any(x => x.InstructorId == id))
-                    throw new Exception("Dependencies");
+                //if (context.OfficeAssignments.Any(x => x.InstructorId == id))
+                //    throw new Exception("Dependencies");
 
-                if (context.CourseInstructors.Any(x => x.InstructorId == id))
-                    throw new Exception("Dependencies");
+                //if (context.CourseInstructors.Any(x => x.InstructorId == id))
+                //    throw new Exception("Dependencies");
                 context.Instructors.Remove(instructors);
                 context.SaveChanges();
 

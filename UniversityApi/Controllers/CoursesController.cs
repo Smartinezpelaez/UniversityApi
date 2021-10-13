@@ -138,8 +138,8 @@ namespace University.Api.Controllers
                 if (context.Enrollments.Any(x => x.CourseId == id))
                     throw new Exception("Dependencies");
 
-                if (context.CourseInstructors.Any(x => x.CourseId == id))
-                    throw new Exception("Dependencies");
+                //if (context.CourseInstructors.Any(x => x.CourseId == id))
+                //    throw new Exception("Dependencies");
 
                 context.Courses.Remove(course);
                 context.SaveChanges();

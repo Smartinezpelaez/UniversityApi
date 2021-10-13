@@ -73,7 +73,7 @@ namespace University.Web.Controllers
         public async Task<IActionResult> Delete(int id)
         {            
             var responseDTO = await apiService.RequestAPI<StudentOutputDTO>(BL.Helpers.Endpoints.URL_BASE,
-              "api/Students/" + id,
+              "api/Students/GetById/" + id,
               null,
               ApiService.Method.Get);
 
