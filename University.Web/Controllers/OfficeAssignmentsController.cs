@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -12,25 +13,27 @@ namespace University.Web.Controllers
         private readonly ApiService apiService = new ApiService();
 
         public async Task<IActionResult> Index()
-        {          
-
+        {
             var responseDTO = await apiService.RequestAPI<List<OfficeAssignmentOutputDTO>>(BL.Helpers.Endpoints.URL_BASE,
                 "api/OfficeAssignment/GetAll/",
                 null,
                 ApiService.Method.Get);
-            var office = (List<OfficeAssignmentOutputDTO>)responseDTO.Data;           
-            return View (office);
+            var office = (List<OfficeAssignmentOutputDTO>)responseDTO.Data;
+            return View(office);
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            await LoadData();
             return View(new OfficeAssignmentDTO());
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(OfficeAssignmentDTO officeAssignmentDTO)
         {
+            await LoadData();
+
             var responseDTO = await apiService.RequestAPI<OfficeAssignmentDTO>(BL.Helpers.Endpoints.URL_BASE,
                 "api/OfficeAssignment/",
                 officeAssignmentDTO,
@@ -45,6 +48,8 @@ namespace University.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
+            await LoadData();
+
             var responseDTO = await apiService.RequestAPI<OfficeAssignmentOutputDTO>(BL.Helpers.Endpoints.URL_BASE,
               "api/OfficeAssignment/GetAll/" + id,
               null,
@@ -58,6 +63,8 @@ namespace University.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(OfficeAssignmentOutputDTO officeAssignmentDTO)
         {
+            await LoadData();
+
             var responseDTO = await apiService.RequestAPI<OfficeAssignmentDTO>(BL.Helpers.Endpoints.URL_BASE,
                 "api/OfficeAssignment/" + officeAssignmentDTO.InstructorID,
                 officeAssignmentDTO,
@@ -96,6 +103,15 @@ namespace University.Web.Controllers
             return View(officeAssignmentDTO);
         }
 
+        private async Task LoadData()
+        {
+            var responseDTO = await apiService.RequestAPI<List<InstructorOutputDTO>>(BL.Helpers.Endpoints.URL_BASE,
+                "api/Instructor/GetAll/",
+                null,
+                ApiService.Method.Get);
 
+            var instructors = (List<InstructorOutputDTO>)responseDTO.Data;
+            ViewData["instructors"] = new SelectList(instructors, "ID", "FullName");
+        }
     }
 }
