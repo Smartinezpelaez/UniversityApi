@@ -1,0 +1,83 @@
+﻿@model University.BL.DTOs.TutorialDTO
+
+@{
+    ViewData["Title"] = "Documents";
+}
+
+<h1>Documents</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+    </dl>
+</div>
+<div>
+    <button id="btnLoadDocument" class="btn btn-primary fas fa-file-upload"></button>
+    <a asp-action="Index" class="btn btn-primary fas fa-undo-alt"></a>
+</div>
+<div>
+    <hr />    
+    <div id="load-document-form">
+        <form asp-action="Documents" method="post" enctype="multipart/form-data">
+            <input asp-for="Id" class="form-control" hidden />
+
+            <div class="form-group">
+                <div class="btn-group" role="group">
+                    <input type="file" class="form-control" name="File" id="File" />
+                    <button type="submit" class="btn btn-sm btn-primary fas fa-save"></button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <td>Name</td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Documents)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>
+                        <a asp-action="Download" asp-route-fileId="@item.Id" asp-route-tutorialId="@Model.Id" class="btn btn-primary fas fa-download"></a>
+
+                        @*<form asp-action="Download" method="get">
+                            <input id="fileId" name="fileId" value="" class="form-control" hidden />
+                            <input id="tutorialId" name="tutorialId" value="@Model.Id" class="form-control" hidden />
+                            <button type="submit" value="Download" class="btn btn-primary fas fa-download"></button>
+                        </form>*@
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    let visible = false;
+
+    $(document).ready(function () {
+        $("#load-document-form").hide();
+    });
+
+    $("#btnLoadDocument").click(function () {
+        visible = !visible;
+        if (visible) $("#load-document-form").show();
+        else $("#load-document-form").hide();        
+    });
+</script>

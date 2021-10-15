@@ -79,6 +79,7 @@ namespace University.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
+            await LoadData();
             var responseDTO = await apiService.RequestAPI<OfficeAssignmentDTO>(BL.Helpers.Endpoints.URL_BASE,
               "api/OfficeAssignment/GetAll/" + id,
               null,
@@ -92,6 +93,7 @@ namespace University.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(OfficeAssignmentDTO officeAssignmentDTO)
         {
+            await LoadData();
             var responseDTO = await apiService.RequestAPI<OfficeAssignmentDTO>(BL.Helpers.Endpoints.URL_BASE,
               "api/OfficeAssignment/" + officeAssignmentDTO.InstructorID,
               null,
@@ -100,7 +102,7 @@ namespace University.Web.Controllers
             if (responseDTO.Code == (int)HttpStatusCode.OK)
                 return RedirectToAction(nameof(Index));
 
-            return View(officeAssignmentDTO);
+            return View(officeAssignmentDTO);   
         }
 
         private async Task LoadData()

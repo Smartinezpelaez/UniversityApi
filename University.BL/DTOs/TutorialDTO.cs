@@ -32,6 +32,9 @@ namespace University.BL.DTOs
 
         [JsonProperty("reviews")]
         public List<ReviewDTO> Reviews { get; set; }
+
+        [JsonProperty("documents")]
+        public List<DocumentDTO> Documents { get; set; }
     }
 
     public class CreatedDTO
@@ -50,5 +53,17 @@ namespace University.BL.DTOs
 
         [JsonProperty("rate")]
         public int Rate { get; set; }
+    }
+
+    public class DocumentDTO
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        [JsonProperty("filePath")]
+        public string FilePath { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
     }
 }
