@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using University.BL.DTOs;
+using University.BL.Helpers;
 using University.BL.Services.Implements;
 
 namespace University.Web.Controllers
@@ -14,7 +15,7 @@ namespace University.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var responseDTO = await apiService.RequestAPI<List<CourseOutputDTO>>(BL.Helpers.Endpoints.URL_BASE,
-                "api/Courses/GetAll/",
+               Endpoints.GET_COURSES,
                 null,
                 ApiService.Method.Get);
 
@@ -32,7 +33,7 @@ namespace University.Web.Controllers
         public async Task<IActionResult> Create(CourseDTO courseDTO)
         {
             var responseDTO = await apiService.RequestAPI<CourseDTO>(BL.Helpers.Endpoints.URL_BASE,
-                "api/Courses/",
+              Endpoints.POST_COURSES,
                 courseDTO,
                 ApiService.Method.Post);
 
@@ -46,7 +47,7 @@ namespace University.Web.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var responseDTO = await apiService.RequestAPI<CourseOutputDTO>(BL.Helpers.Endpoints.URL_BASE,
-              "api/Courses/GetById/" + id,
+              Endpoints.GET_COURSE + id,
               null,
               ApiService.Method.Get);
 
@@ -59,7 +60,7 @@ namespace University.Web.Controllers
         public async Task<IActionResult> Edit(CourseOutputDTO courseDTO)
         {
             var responseDTO = await apiService.RequestAPI<CourseDTO>(BL.Helpers.Endpoints.URL_BASE,
-                "api/Courses/" + courseDTO.CourseID,
+               Endpoints.PUT_COURSES + courseDTO.CourseID,
                 courseDTO,
                 ApiService.Method.Put);
 
@@ -73,7 +74,7 @@ namespace University.Web.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var responseDTO = await apiService.RequestAPI<CourseOutputDTO>(BL.Helpers.Endpoints.URL_BASE,
-              "api/Courses/GetById/" + id,
+             Endpoints.GET_COURSE + id,
               null,
               ApiService.Method.Get);
 
@@ -86,7 +87,7 @@ namespace University.Web.Controllers
         public async Task<IActionResult> Delete(CourseOutputDTO courseDTO)
         {
             var responseDTO = await apiService.RequestAPI<CourseOutputDTO>(BL.Helpers.Endpoints.URL_BASE,
-              "api/Courses/" + courseDTO.CourseID,
+             Endpoints.DELETE_COURSES + courseDTO.CourseID,
               null,
               ApiService.Method.Delete);
 

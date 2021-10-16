@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -13,6 +15,7 @@ namespace University.Web.Controllers
         private readonly ApiService apiService = new ApiService();
         public async Task<IActionResult> Index()
         {
+           
             var responseDTO = await apiService.RequestAPI<List<DepartmentOutputDTO>>(BL.Helpers.Endpoints.URL_BASE,
                Endpoints.GET_DEPARTMENTS,
                 null,
@@ -23,30 +26,45 @@ namespace University.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            await LoadData();
             return View(new DepartmentDTO());
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(DepartmentDTO departmentDTO)
         {
-            var responseDTO = await apiService.RequestAPI<DepartmentDTO>(BL.Helpers.Endpoints.URL_BASE,
-                "api/Department/",
-                departmentDTO,
-                ApiService.Method.Post);
+            await LoadData();
 
-            if (responseDTO.Code == (int)HttpStatusCode.OK)
-                return RedirectToAction(nameof(Index));
+            if (!ModelState.IsValid)
+                return View(departmentDTO);
 
+            try
+            {
+                var responseDTO = await apiService.RequestAPI<DepartmentDTO>(Endpoints.URL_BASE,
+                        Endpoints.POST_DEPARTMENTS,
+                        departmentDTO,
+                        ApiService.Method.Post,
+                        false);
+
+                if (responseDTO.Code == (int)HttpStatusCode.Created)
+                    return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
             return View(departmentDTO);
-        }
+
+        }            
 
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
+            await LoadData();
             var responseDTO = await apiService.RequestAPI<DepartmentOutputDTO>(BL.Helpers.Endpoints.URL_BASE,
-              "api/Department/GetById/" + id,
+             Endpoints.GET_DEPARTMENT + id,
               null,
               ApiService.Method.Get);
 
@@ -58,8 +76,9 @@ namespace University.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(DepartmentOutputDTO departmentDTO)
         {
+            await LoadData();
             var responseDTO = await apiService.RequestAPI<DepartmentDTO>(BL.Helpers.Endpoints.URL_BASE,
-                "api/Department/" + departmentDTO.DepartmentID,
+                Endpoints.PUT_DEPARTMENTS + departmentDTO.DepartmentID,
                 departmentDTO,
                 ApiService.Method.Put);
 
@@ -73,7 +92,7 @@ namespace University.Web.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var responseDTO = await apiService.RequestAPI<DepartmentOutputDTO>(BL.Helpers.Endpoints.URL_BASE,
-              "api/Department/GetById/" + id,
+            Endpoints.GET_DEPARTMENT + id,
               null,
               ApiService.Method.Get);
 
@@ -86,53 +105,25 @@ namespace University.Web.Controllers
         public async Task<IActionResult> Delete(DepartmentOutputDTO departmentDTO)
         {
             var responseDTO = await apiService.RequestAPI<DepartmentOutputDTO>(BL.Helpers.Endpoints.URL_BASE,
-              "api/Department/" + departmentDTO.DepartmentID,
+              Endpoints.DELETE_DEPARTMENTS + departmentDTO.DepartmentID,
               null,
               ApiService.Method.Delete);
 
             if (responseDTO.Code == (int)HttpStatusCode.OK)
                 return RedirectToAction(nameof(Index));
 
-            return View(departmentDTO);
+            return View(departmentDTO);     
         }
+        private async Task LoadData()
+        {
+            var responseDTO = await apiService.RequestAPI<List<InstructorOutputDTO>>(BL.Helpers.Endpoints.URL_BASE,
+               Endpoints.GET_INSTRUCTORS,
+                null,
+                ApiService.Method.Get);
 
-        //[HttpPost]
-        //public async Task<IActionResult> Create(DepartmentDTO departmentDTO)
-        //{
-        //    await GetInstructors();
-
-        //    if (!ModelState.IsValid)
-        //        return View(departmentDTO);
-
-        //    try
-        //    {
-        //        var responseDTO = await apiService.RequestAPI<DepartmentDTO>(Endpoints.URL_BASE,
-        //                Endpoints.POST_DEPARTMENTS,
-        //                departmentDTO,
-        //                ApiService.Method.Post,
-        //                false);
-
-        //        if (responseDTO.Code == (int)HttpStatusCode.Created)
-        //            return RedirectToAction(nameof(Index));
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ModelState.AddModelError(string.Empty, ex.Message);
-        //    }
-
-        //    return View(departmentDTO);
-        //}
-
-        //private async Task GetInstructors()
-        //{
-        //    var responseDTO = await apiService.RequestAPI<List<InstructorOutputDTO>>(Endpoints.URL_BASE,
-        //        Endpoints.GET_INSTRUCTORS,
-        //        null,
-        //        ApiService.Method.Get,
-        //        false);
-
-        //    var instructors = (List<InstructorOutputDTO>)responseDTO.Data;
-        //    ViewData["instructors"] = new SelectList(instructors, "ID", "FullName");
-        //}
+            var instructors = (List<InstructorOutputDTO>)responseDTO.Data;
+            ViewData["instructors"] = new SelectList(instructors, "ID", "FullName");
+        }
     }
 }
+

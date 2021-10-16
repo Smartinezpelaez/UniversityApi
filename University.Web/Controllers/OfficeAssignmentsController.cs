@@ -5,6 +5,8 @@ using System.Net;
 using System.Threading.Tasks;
 using University.BL.DTOs;
 using University.BL.Services.Implements;
+using University.BL.Helpers;
+using System;
 
 namespace University.Web.Controllers
 {
@@ -15,7 +17,7 @@ namespace University.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var responseDTO = await apiService.RequestAPI<List<OfficeAssignmentOutputDTO>>(BL.Helpers.Endpoints.URL_BASE,
-                "api/OfficeAssignment/GetAll/",
+                Endpoints.GET_OFFICEASSIGNMENTS,
                 null,
                 ApiService.Method.Get);
             var office = (List<OfficeAssignmentOutputDTO>)responseDTO.Data;
@@ -34,13 +36,25 @@ namespace University.Web.Controllers
         {
             await LoadData();
 
-            var responseDTO = await apiService.RequestAPI<OfficeAssignmentDTO>(BL.Helpers.Endpoints.URL_BASE,
-                "api/OfficeAssignment/",
-                officeAssignmentDTO,
-                ApiService.Method.Post);
+            if (!ModelState.IsValid)
+                return View(officeAssignmentDTO);
 
-            if (responseDTO.Code == (int)HttpStatusCode.OK)
-                return RedirectToAction(nameof(Index));
+            try
+            {
+                var responseDTO = await apiService.RequestAPI<OfficeAssignmentDTO>(BL.Helpers.Endpoints.URL_BASE,
+                       Endpoints.POST_COURSES,
+                       officeAssignmentDTO,
+                       ApiService.Method.Post,
+                       false);
+
+                if (responseDTO.Code == (int)HttpStatusCode.OK)
+                    return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
 
             return View(officeAssignmentDTO);
         }
@@ -51,7 +65,7 @@ namespace University.Web.Controllers
             await LoadData();
 
             var responseDTO = await apiService.RequestAPI<OfficeAssignmentOutputDTO>(BL.Helpers.Endpoints.URL_BASE,
-              "api/OfficeAssignment/GetAll/" + id,
+             Endpoints.GET_OFFICEASSIGNMENT + id,
               null,
               ApiService.Method.Get);
 
@@ -66,7 +80,7 @@ namespace University.Web.Controllers
             await LoadData();
 
             var responseDTO = await apiService.RequestAPI<OfficeAssignmentDTO>(BL.Helpers.Endpoints.URL_BASE,
-                "api/OfficeAssignment/" + officeAssignmentDTO.InstructorID,
+               Endpoints.PUT_OFFICEASSIGNMENTS + officeAssignmentDTO.InstructorID,
                 officeAssignmentDTO,
                 ApiService.Method.Put);
 
@@ -79,9 +93,9 @@ namespace University.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            await LoadData();
+           
             var responseDTO = await apiService.RequestAPI<OfficeAssignmentDTO>(BL.Helpers.Endpoints.URL_BASE,
-              "api/OfficeAssignment/GetAll/" + id,
+             Endpoints.GET_OFFICEASSIGNMENT + id,
               null,
               ApiService.Method.Get);
 
@@ -93,9 +107,9 @@ namespace University.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(OfficeAssignmentDTO officeAssignmentDTO)
         {
-            await LoadData();
+           
             var responseDTO = await apiService.RequestAPI<OfficeAssignmentDTO>(BL.Helpers.Endpoints.URL_BASE,
-              "api/OfficeAssignment/" + officeAssignmentDTO.InstructorID,
+             Endpoints.DELETE_OFFICEASSIGNMENTS + officeAssignmentDTO.InstructorID,
               null,
               ApiService.Method.Delete);
 
@@ -108,7 +122,7 @@ namespace University.Web.Controllers
         private async Task LoadData()
         {
             var responseDTO = await apiService.RequestAPI<List<InstructorOutputDTO>>(BL.Helpers.Endpoints.URL_BASE,
-                "api/Instructor/GetAll/",
+               Endpoints.GET_INSTRUCTORS,
                 null,
                 ApiService.Method.Get);
 
