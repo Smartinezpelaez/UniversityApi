@@ -45,8 +45,8 @@ namespace University.Web.Controllers
                 var responseDTO = await apiService.RequestAPI<DepartmentDTO>(Endpoints.URL_BASE,
                         Endpoints.POST_DEPARTMENTS,
                         departmentDTO,
-                        ApiService.Method.Post,
-                        false);
+                        ApiService.Method.Post
+                        );
 
                 if (responseDTO.Code == (int)HttpStatusCode.Created)
                     return RedirectToAction(nameof(Index));
@@ -91,19 +91,22 @@ namespace University.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
+            await LoadData();
             var responseDTO = await apiService.RequestAPI<DepartmentOutputDTO>(BL.Helpers.Endpoints.URL_BASE,
             Endpoints.GET_DEPARTMENT + id,
               null,
               ApiService.Method.Get);
 
-            var course = (DepartmentOutputDTO)responseDTO.Data;
+            var department = (DepartmentOutputDTO)responseDTO.Data;
 
-            return View(course);
+            return View(department);
         }
 
         [HttpPost]
         public async Task<IActionResult> Delete(DepartmentOutputDTO departmentDTO)
         {
+
+            await LoadData();
             var responseDTO = await apiService.RequestAPI<DepartmentOutputDTO>(BL.Helpers.Endpoints.URL_BASE,
               Endpoints.DELETE_DEPARTMENTS + departmentDTO.DepartmentID,
               null,
@@ -114,6 +117,7 @@ namespace University.Web.Controllers
 
             return View(departmentDTO);     
         }
+
         private async Task LoadData()
         {
             var responseDTO = await apiService.RequestAPI<List<InstructorOutputDTO>>(BL.Helpers.Endpoints.URL_BASE,

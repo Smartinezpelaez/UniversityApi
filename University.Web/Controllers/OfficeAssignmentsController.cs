@@ -42,10 +42,10 @@ namespace University.Web.Controllers
             try
             {
                 var responseDTO = await apiService.RequestAPI<OfficeAssignmentDTO>(BL.Helpers.Endpoints.URL_BASE,
-                       Endpoints.POST_COURSES,
+                       Endpoints.PUT_OFFICEASSIGNMENTS,
                        officeAssignmentDTO,
-                       ApiService.Method.Post,
-                       false);
+                       ApiService.Method.Post
+                       );
 
                 if (responseDTO.Code == (int)HttpStatusCode.OK)
                     return RedirectToAction(nameof(Index));
@@ -94,14 +94,14 @@ namespace University.Web.Controllers
         public async Task<IActionResult> Delete(int id)
         {
            
-            var responseDTO = await apiService.RequestAPI<OfficeAssignmentDTO>(BL.Helpers.Endpoints.URL_BASE,
+            var responseDTO = await apiService.RequestAPI<OfficeAssignmentOutputDTO>(BL.Helpers.Endpoints.URL_BASE,
              Endpoints.GET_OFFICEASSIGNMENT + id,
               null,
               ApiService.Method.Get);
 
-            var course = (OfficeAssignmentDTO)responseDTO.Data;
+            var office = (OfficeAssignmentOutputDTO)responseDTO.Data;
 
-            return View(course);
+            return View(office);
         }
 
         [HttpPost]

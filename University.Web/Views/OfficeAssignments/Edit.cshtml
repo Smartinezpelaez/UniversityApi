@@ -13,9 +13,9 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                @*<label asp-for="InstructorID" class="control-label"></label>*@
-                <input asp-for="InstructorID" class="form-control"hidden />
-                @*<span asp-validation-for="InstructorID" class="text-danger"></span>*@
+                <label asp-for="InstructorID" class="control-label"></label>
+                @Html.DropDownListFor(m => m.InstructorID, (SelectList)ViewData["instructors"], new { @class = "form-control" })
+                <span asp-validation-for="InstructorID" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Location" class="control-label"></label>

@@ -45,14 +45,14 @@ namespace University.Api.Controllers
         /// <param name="id">Id del OfficeAssignment</param>
         /// <returns></returns>
         [HttpGet]
-        [Route("GetById/{id}")] //  api/Courses/GetById/1045
+        [Route("GetById/{id}")] //  api/Courses/GetById/1
         public IActionResult GetById(int id)
         {
             var OfficeAssignments = context.OfficeAssignments.Find(id);
             if (OfficeAssignments == null)
                 return Ok(new ResponseDTO { Code = (int)HttpStatusCode.NotFound, Message = "NotFound" });
 
-            var OfficeAssignmentDTO = mapper.Map<OfficeAssignmentDTO>(OfficeAssignments);
+            var OfficeAssignmentDTO = mapper.Map<OfficeAssignmentOutputDTO>(OfficeAssignments);
             return Ok(new ResponseDTO { Code = (int)HttpStatusCode.OK, Data = OfficeAssignmentDTO });
         }
 
